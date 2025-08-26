@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spoiler Reveal</title>
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
   <style>
+    html, body { margin: 0; padding: 0; }
+
     body {
       font-family: 'Josefin Sans', sans-serif;
       font-weight: 325;
-      background: transparent;  /* transparent page background */
-      display: flex;
-      align-items: left;
-      justify-content: left;
-      height: 100vh;
-      margin: 0;
+      background: transparent;
+      /* Let the page be at least one viewport tall, but allow it to grow */
+      min-height: 100dvh; /* falls back to 100vh if dVH unsupported */
+      display: block;
     }
 
     .spoiler-container {
-      position: left;
+      position: relative;        /* was 'left' (invalid) */
       width: 100%;
       max-width: 100%;
-      background: transparent;  /* transparent container background */
+      background: transparent;
       padding: 3px;
       margin: 3px;
       border-radius: 10px;
-      box-shadow: none;         /* remove shadow if you want it fully invisible */
+      box-shadow: none;
       cursor: pointer;
-      overflow: hidden;
+      overflow: visible;         /* avoid clipping */
     }
 
     .spoiler-text {
@@ -36,10 +36,7 @@
       filter: blur(6px);
       transition: filter 0.4s ease;
     }
-
-    .spoiler-container.revealed .spoiler-text {
-      filter: none;
-    }
+    .spoiler-container.revealed .spoiler-text { filter: none; }
 
     .spoiler-overlay {
       position: absolute;
@@ -47,29 +44,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: transparent; /* semi-dark overlay for contrast */
-      color: #000000;
+      background: transparent;
+      color: #000;
       font-size: 20px;
       font-weight: 400;
       text-align: center;
       padding: 1em;
       transition: opacity 0.3s ease;
+      /* Optional: allow clicks to pass through the overlay */
+      /* pointer-events: none; */
     }
-
     .spoiler-container.revealed .spoiler-overlay {
       opacity: 0;
       pointer-events: none;
     }
 
-    ul {
-      margin: 0.8em 0 0 1.2em;
-      padding: 0;
-    }
-
-    ul li {
-      font-size: 0.9em; /* smaller bullet points */
-      margin-bottom: 0.5em;
-    }
+    ul { margin: 0.8em 0 0 1.2em; padding: 0; }
+    ul li { font-size: 0.9em; margin-bottom: 0.5em; }
   </style>
 </head>
 <body>
@@ -87,6 +78,8 @@
       </ul>
     </div>
   </div>
+
+  <!-- If you're using the iFrame Resizer library, include this line: -->
+  <script src="https://cdn.jsdelivr.net/npm/iframe-resizer/js/iframeResizer.contentWindow.min.js"></script>
 </body>
 </html>
-
