@@ -11,14 +11,13 @@
     body {
       font-family: 'Josefin Sans', sans-serif;
       font-weight: 325;
-      background: transparent;
-      /* Let the page be at least one viewport tall, but allow it to grow */
-      min-height: 100dvh; /* falls back to 100vh if dVH unsupported */
-      display: block;
+      background: transparent;        /* transparent page background */
+      min-height: 100dvh;             /* allow taller-than-viewport on mobile */
+      display: block;                  /* avoid flex constraints */
     }
 
     .spoiler-container {
-      position: relative;        /* was 'left' (invalid) */
+      position: relative;              /* was invalid 'left' */
       width: 100%;
       max-width: 100%;
       background: transparent;
@@ -27,7 +26,7 @@
       border-radius: 10px;
       box-shadow: none;
       cursor: pointer;
-      overflow: visible;         /* avoid clipping */
+      overflow: visible;               /* avoid clipping the content */
     }
 
     .spoiler-text {
@@ -45,18 +44,16 @@
       align-items: center;
       justify-content: center;
       background: transparent;
-      color: #000;
+      color: #000000;
       font-size: 20px;
       font-weight: 400;
-      text-align: center;
+      text-align: centre;
       padding: 1em;
       transition: opacity 0.3s ease;
-      /* Optional: allow clicks to pass through the overlay */
-      /* pointer-events: none; */
+      pointer-events: none;            /* let taps/clicks pass through to container */
     }
     .spoiler-container.revealed .spoiler-overlay {
       opacity: 0;
-      pointer-events: none;
     }
 
     ul { margin: 0.8em 0 0 1.2em; padding: 0; }
@@ -64,8 +61,8 @@
   </style>
 </head>
 <body>
-  <div class="spoiler-container" onclick="this.classList.add('revealed')">
-    <div class="spoiler-overlay">⚠️ Spoiler alert! Click here to reveal!</div>
+  <div id="spoiler" class="spoiler-container" onclick="this.classList.add('revealed'); postHeight();" role="button" tabindex="0" aria-expanded="false">
+    <div class="spoiler-overlay">⚠️ Spoiler alert! Tap or click to reveal!</div>
     <div class="spoiler-text">
       <p><strong>So why are these colours the most common?</strong></p>
       <ul>
@@ -79,7 +76,51 @@
     </div>
   </div>
 
-  <!-- If you're using the iFrame Resizer library, include this line: -->
-  <script src="https://cdn.jsdelivr.net/npm/iframe-resizer/js/iframeResizer.contentWindow.min.js"></script>
+  <!-- Auto-resize: child -> parent via postMessage -->
+  <script>
+    (function () {
+      function docHeight() {
+        // Take the tallest credible measurement
+        return Math.max(
+          document.documentElement.scrollHeight,
+          document.body.scrollHeight,
+          document.documentElement.offsetHeight
+        );
+      }
+      window.postHeight = function postHeight() {
+        // Include an id if you like (e.g., window.name) to target a specific iframe
+        parent.postMessage({ type: 'setHeight', height: docHeight(), id: window.name || null }, '*');
+      };
+
+      // Post on load and when layout changes
+      window.addEventListener('load', postHeight);
+      window.addEventListener('resize', postHeight);
+
+      // Recalculate after webfonts finish loading (affects line breaks)
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(postHeight);
+      }
+
+      // Watch for DOM size changes
+      const ro = new ResizeObserver(postHeight);
+      ro.observe(document.documentElement);
+      const container = document.getElementById('spoiler');
+      if (container) ro.observe(container);
+
+      // Respond if parent pings us
+      window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'getHeight') postHeight();
+      });
+
+      // If the user reveals the spoiler via keyboard
+      container?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          container.classList.add('revealed');
+          postHeight();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
