@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spoiler Reveal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 325;
+      background: transparent;  /* transparent page background */
+      display: flex;
+      align-items: left;
+      justify-content: left;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .spoiler-container {
+      position: left;
+      width: 100%;
+      max-width: 100%;
+      background: transparent;  /* transparent container background */
+      padding: 3px;
+      margin: 3px;
+      border-radius: 10px;
+      box-shadow: none;         /* remove shadow if you want it fully invisible */
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .spoiler-text {
+      font-size: 18px;
+      line-height: 1.5;
+      filter: blur(6px);
+      transition: filter 0.4s ease;
+    }
+
+    .spoiler-container.revealed .spoiler-text {
+      filter: none;
+    }
+
+    .spoiler-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent; /* semi-dark overlay for contrast */
+      color: #000000;
+      font-size: 20px;
+      font-weight: 400;
+      text-align: center;
+      padding: 1em;
+      transition: opacity 0.3s ease;
+    }
+
+    .spoiler-container.revealed .spoiler-overlay {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    ul {
+      margin: 0.8em 0 0 1.2em;
+      padding: 0;
+    }
+
+    ul li {
+      font-size: 0.9em; /* smaller bullet points */
+      margin-bottom: 0.5em;
+    }
+  </style>
+</head>
+<body>
+  <div class="spoiler-container" onclick="this.classList.add('revealed')">
+    <div class="spoiler-overlay">⚠️ Spoiler alert! Click here to reveal!</div>
+    <div class="spoiler-text">
+      <p><strong>So why are these colours the most common?</strong></p>
+      <ul>
+        <li><strong>Red (77%)</strong>: red has historically symbolised strength and power across various cultures, as well as blood and sacrifice, while the colour itself is very visible to the human eye.</li>
+        <li><strong>White (69%)</strong>: white represents peace, purity and unity, and contrasts well with strong colours such as red.</li>
+        <li><strong>Blue (51%)</strong>: blue symbolises freedom and strength and can represent both the sea and sky.</li>
+        <li><strong>Yellow/gold (43%)</strong>: yellow or gold can symbolise the sun, wealth and energy.</li>
+        <li><strong>Green (41%)</strong>: green can symbolise agriculture and fertility, but is also a central colour to Islam.</li>
+        <li><strong>Black (21%)</strong>: black represents power and strength, and like white contrasts well with strong colours like red.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
